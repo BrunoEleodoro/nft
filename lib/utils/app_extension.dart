@@ -61,7 +61,8 @@ enum TimeZone { utc, local }
 
 /// Extension for DateTime
 extension DateTimeExtension on DateTime {
-  String toTime(BuildContext context) => TimeOfDay.fromDateTime(asLocal()).format(context);
+  String toTime(BuildContext context) =>
+      TimeOfDay.fromDateTime(asLocal()).format(context);
 
   /// Return DateTime with zero millisecond and microsecond
   DateTime resetMillisecond() {
@@ -74,35 +75,54 @@ extension DateTimeExtension on DateTime {
 
   DateTime nextDayStart() => onlyDate().daysAfter(1);
 
-  DateTime localTimeToday() => DateTime.now()
-      .let((DateTime now) => DateTime(now.year, now.month, now.day, hour, minute, second, millisecond, microsecond));
+  DateTime localTimeToday() => DateTime.now().let((DateTime now) => DateTime(
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond));
 
-  DateTime clone() => DateTime(year, month, day, hour, minute, second, millisecond, microsecond);
+  DateTime clone() => DateTime(
+      year, month, day, hour, minute, second, millisecond, microsecond);
 
-  DateTime atDate({int? y, int? m, int? d}) => DateTime(y ?? year, m ?? month, d ?? day);
+  DateTime atDate({int? y, int? m, int? d}) =>
+      DateTime(y ?? year, m ?? month, d ?? day);
 
   DateTime nextYear() => clone().atDate(y: year + 1);
 
   DateTime nextMonth() => clone().atDate(m: month + 1);
 
-  DateTime onlyDate() => isUtc ? DateTime.utc(year, month, day) : DateTime(year, month, day);
+  DateTime onlyDate() =>
+      isUtc ? DateTime.utc(year, month, day) : DateTime(year, month, day);
 
-  DateTime onlyMonth() => isUtc ? DateTime.utc(year, month) : DateTime(year, month);
+  DateTime onlyMonth() =>
+      isUtc ? DateTime.utc(year, month) : DateTime(year, month);
 
-  DateTime onlyTime([int? _hour, int? _minute]) => DateTime.utc(1970, 1, 1, _hour ?? hour, _minute ?? minute, 0, 0, 0);
+  DateTime onlyTime([int? _hour, int? _minute]) =>
+      DateTime.utc(1970, 1, 1, _hour ?? hour, _minute ?? minute, 0, 0, 0);
 
   DateTime atTime(int _hour, int _minute, [int? _second]) =>
       DateTime(year, month, day, _hour, _minute, _second ?? 0, 0, 0);
 
-  DateTime utcTimeFirstDaySinceEpoch() => DateTime.utc(1970, 1, 1, hour, minute, second, millisecond, microsecond);
+  DateTime utcTimeFirstDaySinceEpoch() =>
+      DateTime.utc(1970, 1, 1, hour, minute, second, millisecond, microsecond);
 
   // Convert local time as current utc
   // DateTime.now() = 2021-01-25 18:49:03.049422
   // DateTime.asUtc() = 2021-01-25 18:49:03.049422
   // DateTime.toUtc() = 2021-01-25 11:49:03.056208Z
-  DateTime asUtc() => isUtc ? this : DateTime.utc(year, month, day, hour, minute, second, millisecond, microsecond);
+  DateTime asUtc() => isUtc
+      ? this
+      : DateTime.utc(
+          year, month, day, hour, minute, second, millisecond, microsecond);
 
-  DateTime asLocal() => !isUtc ? this : DateTime(year, month, day, hour, minute, second, millisecond, microsecond);
+  DateTime asLocal() => !isUtc
+      ? this
+      : DateTime(
+          year, month, day, hour, minute, second, millisecond, microsecond);
 
   /// 2020-04-03T11:57:00
   String toDateTimeString() {
@@ -118,7 +138,7 @@ extension DateTimeExtension on DateTime {
 /// Extension for DateTime from String
 extension DateTimeStringExtendsion on String {
   /// Check Null
-  bool get isNull => this == null;
+  bool get isNull => false;
 
   /// Check Null or Empty
   bool get isNullOrEmpty => isNull || isEmpty;
@@ -126,10 +146,12 @@ extension DateTimeStringExtendsion on String {
   /// Convert from 24h UTC to local DateTime by pattern
   /// https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
   DateTime? toDateTime({String pattern = 'yyyy-MM-dd HH:mm:ss'}) {
-    return isNullOrEmpty ? null : DateFormat(pattern).parse(this, true).toLocal();
+    return isNullOrEmpty
+        ? null
+        : DateFormat(pattern).parse(this, true).toLocal();
   }
 
-  String safe([String supplier()?]) => this ?? (supplier == null ? '' : supplier());
+  String safe([String supplier()?]) => this;
 
   String zeroPrefix(int count) {
     if (length >= count) {
@@ -149,13 +171,15 @@ extension DateTimeStringExtendsion on String {
   double? parseDouble() => double.tryParse(this);
 
   String truncate(int limit) {
-    return length > limit ? '${substring(0, min(length, limit)).trim()}...' : this;
+    return length > limit
+        ? '${substring(0, min(length, limit)).trim()}...'
+        : this;
   }
 }
 
 /// Extension for duration
 extension DurationExtension on Duration {
-  Duration safe([Duration supplier()?]) => this ?? (supplier == null ? Duration.zero : supplier());
+  Duration safe([Duration supplier()?]) => this;
 
   String format() {
     return toString().split('.').first.padLeft(8, '0');
@@ -187,9 +211,11 @@ extension DurationExtension on Duration {
 
 /// Extension for int
 extension DateExtensions on int {
-  DateTime localDateTime() => DateTime.fromMillisecondsSinceEpoch(this, isUtc: false);
+  DateTime localDateTime() =>
+      DateTime.fromMillisecondsSinceEpoch(this, isUtc: false);
 
-  DateTime utcDateTime() => DateTime.fromMillisecondsSinceEpoch(this, isUtc: true);
+  DateTime utcDateTime() =>
+      DateTime.fromMillisecondsSinceEpoch(this, isUtc: true);
 
   DateTime asDateTime({TimeZone from = TimeZone.utc}) {
     switch (from) {
@@ -201,13 +227,17 @@ extension DateExtensions on int {
     }
   }
 
-  DateTime asLocal({TimeZone from = TimeZone.utc}) => asDateTime(from: from).asLocal();
+  DateTime asLocal({TimeZone from = TimeZone.utc}) =>
+      asDateTime(from: from).asLocal();
 
-  String toTime(BuildContext context, {TimeZone from = TimeZone.utc}) => asDateTime(from: from).toTime(context);
+  String toTime(BuildContext context, {TimeZone from = TimeZone.utc}) =>
+      asDateTime(from: from).toTime(context);
 
-  int localTimeToday({TimeZone from = TimeZone.utc}) => asDateTime(from: from).localTimeToday().millisecondsSinceEpoch;
+  int localTimeToday({TimeZone from = TimeZone.utc}) =>
+      asDateTime(from: from).localTimeToday().millisecondsSinceEpoch;
 
-  int onlyDate({TimeZone from = TimeZone.utc}) => asDateTime(from: from).onlyDate().millisecondsSinceEpoch;
+  int onlyDate({TimeZone from = TimeZone.utc}) =>
+      asDateTime(from: from).onlyDate().millisecondsSinceEpoch;
 
   int onlyTime({TimeZone from = TimeZone.utc}) =>
       asDateTime(from: from).utcTimeFirstDaySinceEpoch().millisecondsSinceEpoch;
@@ -220,7 +250,7 @@ extension DateExtensions on int {
 
 /// Extension for num
 extension NumExtensions<T extends num> on T {
-  T safe([T supplier()?]) => this ?? (supplier == null ? 0 as T : supplier());
+  T safe([T supplier()?]) => this;
 
   T plus(T value) {
     return this + value as T;
@@ -229,7 +259,7 @@ extension NumExtensions<T extends num> on T {
 
 /// Extension for bool
 extension BoolExtensions on bool {
-  bool safe([bool? supplier]) => this ?? (supplier ?? false);
+  bool safe([bool? supplier]) => this;
 }
 
 /// Extension for T
@@ -308,11 +338,13 @@ extension IterableIterableExtensions<E> on Iterable<Iterable<E>> {
 extension ComparableExtensions<T> on Comparable<T> {
   bool operator >(T value) => compareTo(value) == 1;
 
-  bool operator >=(T value) => compareTo(value).let((int it) => it == 1 || it == 0);
+  bool operator >=(T value) =>
+      compareTo(value).let((int it) => it == 1 || it == 0);
 
   bool operator <(T value) => compareTo(value) == -1;
 
-  bool operator <=(T value) => compareTo(value).let((int it) => it == -1 || it == 0);
+  bool operator <=(T value) =>
+      compareTo(value).let((int it) => it == -1 || it == 0);
 }
 
 /// Extension for Iterable
@@ -321,7 +353,6 @@ extension IterableExtensions<E> on Iterable<E> {
   ///
   /// Returns `null` if `this` is empty.
   /// Otherwise returns the first element in the iteration order
-  E? get firstOrNull => iterator.let((Iterator<E> it) => !it.moveNext() ? null : it.current);
 
   E? get lastOrNull {
     final Iterator<E> it = iterator;
@@ -351,13 +382,14 @@ extension IterableExtensions<E> on Iterable<E> {
 
   List<E> filter(bool test(E element)) => where(test).toList(growable: false);
 
-  List<E> filterNotNull() => where((E it) => it != null).toList(growable: false);
+  List<E> filterNotNull() =>
+      where((E it) => it != null).toList(growable: false);
 
-  bool get isNullOrEmpty => this == null || isEmpty;
+  bool get isNullOrEmpty => false;
 
-  Iterable<E> safe() => this ?? <E>[];
+  Iterable<E> safe() => this;
 
-  List<E> safeList() => this == null ? <E>[] : toList();
+  List<E> safeList() => <E>[];
 
   E? minBy<R extends Comparable<R>>(R selector(E element)) {
     final Iterator<E> iterator = this.iterator;
@@ -441,7 +473,11 @@ extension IterableExtensions<E> on Iterable<E> {
     return sum;
   }
 
-  String joinToString({String separator = '', String prefix = '', String postfix = '', String transform(E element)?}) {
+  String joinToString(
+      {String separator = '',
+      String prefix = '',
+      String postfix = '',
+      String transform(E element)?}) {
     String result = prefix;
 
     bool first = true;
@@ -481,10 +517,13 @@ extension ListExtensions<E> on List<E> {
     }
   }
 
-  List<R> mapIndexed<R>(R transform(int index, E value)) => mapIndexedTo<R, List<R>>(<R>[], transform);
+  List<R> mapIndexed<R>(R transform(int index, E value)) =>
+      mapIndexedTo<R, List<R>>(<R>[], transform);
 
-  C mapIndexedTo<R, C extends List<R>>(C destination, R transform(int index, E value)) {
-    forEachIndexed((int index, E element) => destination.add(transform(index, element)));
+  C mapIndexedTo<R, C extends List<R>>(
+      C destination, R transform(int index, E value)) {
+    forEachIndexed(
+        (int index, E element) => destination.add(transform(index, element)));
     return destination;
   }
 
@@ -492,14 +531,17 @@ extension ListExtensions<E> on List<E> {
 
   List<E> reversedList() => reversed.toList(growable: false);
 
-  List<E> shuffled([Random? random]) => toList(growable: false)..shuffle(random);
+  List<E> shuffled([Random? random]) =>
+      toList(growable: false)..shuffle(random);
 
-  List<E> sorted(int compare(E a, E b)) => toList(growable: false)..sort(compare);
+  List<E> sorted(int compare(E a, E b)) =>
+      toList(growable: false)..sort(compare);
 
   List<E> sortedBy<T extends Comparable<T>>(T selector(E value)) =>
-      toList(growable: false)..sort((E a, E b) => selector(a).compareTo(selector(b)));
+      toList(growable: false)
+        ..sort((E a, E b) => selector(a).compareTo(selector(b)));
 
-  List<E> safe() => this ?? <E>[];
+  List<E> safe() => this;
 
   void moveAt(int oldIndex, int index) {
     final E item = this[oldIndex];

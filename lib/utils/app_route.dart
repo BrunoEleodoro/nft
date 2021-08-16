@@ -58,7 +58,7 @@ class AppRoute {
     Widget child,
   ) {
     return MultiProvider(
-      providers: providers ?? <SingleChildWidget>[],
+      providers: providers,
       child: child,
     );
   }

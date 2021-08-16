@@ -17,9 +17,12 @@ class AppDialog {
   bool requestClose = false;
 
   /// Show alert dialog shortcut
-  static Future<void> show(BuildContext context, String? content, {String? title}) async {
+  static Future<void> show(BuildContext context, String? content,
+      {String? title}) async {
     await Future<void>.delayed(const Duration(milliseconds: 500));
-    return context.read<AppDialog>().showAlertDialog(context, content, title: title);
+    return context
+        .read<AppDialog>()
+        .showAlertDialog(context, content, title: title);
   }
 
   /// Hide alert dialog shortcut
@@ -28,7 +31,8 @@ class AppDialog {
   }
 
   // Show Alert Dialog
-  Future<void> showAlertDialog(BuildContext context, String? content, {String? title}) async {
+  Future<void> showAlertDialog(BuildContext context, String? content,
+      {String? title}) async {
     return showAppDialog(
       context,
       CupertinoAlertDialog(
@@ -61,7 +65,7 @@ class AppDialog {
             hideAppDialog();
           }
         });
-        return body ?? Container();
+        return body;
       },
     );
   }
